@@ -7,6 +7,7 @@ resource "aws_security_group_rule" "backend_alb_bastion" {
   to_port           = 80
 }
 
+# connection from bastion to laptop.
 resource "aws_security_group_rule" "bastion_laptop" {
   type              = "ingress"
   security_group_id = local.bastion_sg_id
@@ -16,6 +17,7 @@ resource "aws_security_group_rule" "bastion_laptop" {
   to_port           = 22
 }
 
+# connection from mongodb to bastion.
 resource "aws_security_group_rule" "mongodb_bastion" {
   type              = "ingress"
   security_group_id = local.mongodb_sg_id
