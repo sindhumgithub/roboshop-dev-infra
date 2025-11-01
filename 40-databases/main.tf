@@ -31,7 +31,7 @@ resource "terraform_data" "mongodb" {
     destination = "/tmp/bootstarp.sh" 
   }
 
-  provisioner "remote_exec" {
+  provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/bootstarp.sh",
       "sudo sh /tmp/bootstarp.sh mongodb"
