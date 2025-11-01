@@ -5,7 +5,6 @@ terraform {
       version = "6.16.0"
     }
   }
-
   backend "s3" {
     bucket = "remote-state-86s-dev-rsproject"
     key    = "roboshop-project-dev-databases"
