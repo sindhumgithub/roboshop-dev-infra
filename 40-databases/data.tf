@@ -36,6 +36,10 @@ data "aws_ssm_parameter" "rabbitmq_sg_id" {
   name  = "/${var.project_name}/${var.environment}/rabbitmq_sg_id"
 }
 
+# Creating mysql security group
+data "aws_ssm_parameter" "mysql_sg_id" {
+  name  = "/${var.project_name}/${var.environment}/mysql_sg_id"
+}
 
 # Creating database subnet id as mongodb is created in database subnet
 data "aws_ssm_parameter" "database_subnet_id" {
