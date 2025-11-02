@@ -1,5 +1,6 @@
 #!/bin/bash
 component=$1
+dnf install ansible -y
 REPO_URL=https://github.com/sindhumgithub/ansible-roboshop-roles-tf.git
 REPO_DIR=/opt/roboshop/ansible  #This directory is used to clone.
 ANSIBLE_DIR=ansible-roboshop-roles-tf #Pull the github repository.
