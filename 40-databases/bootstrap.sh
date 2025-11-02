@@ -8,7 +8,7 @@ ANSIBLE_DIR=ansible-roboshop-roles-tf #Pull the github repository.
 mkdir -p $REPO_DIR #Create a directory with the below path as: /opt/roboshop/ansible
 # If exists then DON'T throw an error.
 mkdir -p /var/log/roboshop/
-touch ansible.log
+touch /var/log/roboshop/ansible.log
 
 cd $REPO_DIR
 
