@@ -1,6 +1,6 @@
 #!/bin/bash
 component=$1
-environment=$2
+env=$2
 dnf install ansible -y
 
 # REPO_URL=https://github.com/sindhumgithub/ansible-roboshop-roles-tf.git
@@ -11,7 +11,7 @@ dnf install ansible -y
 # # If exists then DON'T throw an error.
 mkdir -p /var/log/roboshop/
 touch /var/log/roboshop/ansible.log
-ansible-pull -U https://github.com/sindhumgithub/ansible-roboshop-roles-tf.git -e component=$component environment=$environment main.yaml
+ansible-pull -U https://github.com/sindhumgithub/ansible-roboshop-roles-tf.git -e component=$component -e env=$env main.yaml
 
 # cd $REPO_DIR
 
