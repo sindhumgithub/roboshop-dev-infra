@@ -82,7 +82,6 @@ resource "terraform_data" "redis" {
 }
 
 
-
 # Terraform code to create rabbitmq ec2 instance
 resource "aws_instance" "rabbitmq" {
     ami = local.ami_id
@@ -172,4 +171,40 @@ resource "terraform_data" "mysql" {
       "sudo sh /tmp/bootstarp.sh mysql dev"
     ]
   }
+}
+
+# Route53 record creation for mongodb
+resource "aws_route53_record" "mongodb" {
+  zone_id = var.zone_id
+  name    = "mongodb.${var.environment}.${var.domain_name}" #mongodb.dev.sindhuworld.icu
+  type    = "A"
+  ttl     = 1
+  records = [aws_instance.mongodb.private_ip]
+}
+
+# Route53 record creation for redis
+resource "aws_route53_record" "redis" {
+  zone_id = var.zone_id
+  name    = "redis.${var.environment}.${var.domain_name}"
+  type    = "A"
+  ttl     = 1
+  records = [aws_instance.redis.private_ip]
+}
+
+# Route53 record creation for rabbitmq
+resource "aws_route53_record" "rabbitmq" {
+  zone_id = var.zone_id
+  name    = "rabbitmq.${var.environment}.${var.domain_name}"
+  type    = "A"
+  ttl     = 1
+  records = [aws_instance.rabbitmq.private_ip]
+}
+
+# Route53 record creation for mysql
+resource "aws_route53_record" "mysql" {
+  zone_id = var.zone_id
+  name    = "mysql.${var.environment}.${var.domain_name}"
+  type    = "A"
+  ttl     = 1
+  records = [aws_instance.mysql.private_ip]
 }
