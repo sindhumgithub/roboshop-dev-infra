@@ -29,7 +29,7 @@ resource "aws_instance" "user" {
 
 # terraform copies the file to redis server
     provisioner "file" {
-    source = "catalogue.sh"
+    source = "user.sh"
     destination = "/tmp/user.sh" 
   }
 
