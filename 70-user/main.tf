@@ -124,3 +124,36 @@ tags = merge(
     }
   )
 }
+
+# 7. Autoscaling code 
+resource "aws_autoscaling_group" "user" {
+  name                      = "${local.common_name_suffix}-user"
+  max_size                  = 10
+  min_size                  = 1
+  health_check_grace_period = 100
+  health_check_type         = "ELB"
+  desired_capacity          = 1
+  force_delete              = false
+  launch_template {
+    id      = aws_launch_template.user.id
+    version = aws_launch_template.user.latest_version
+  }
+  vpc_zone_identifier       = local.private_subnet_ids
+  target_group_arns = [aws_lb_target_group.user.arn]
+  dynamic "tag" {  # We will get the iterator with name as tag
+    for_each = merge(
+      local.common_tags,
+      {
+        Name = "${local.common_name_suffix}-user"
+      }
+    )
+    content {
+      key                 = tag.key
+      value               = tag.value
+      propagate_at_launch = true
+    }
+  }
+  timeouts {
+    delete = "15m"
+  }
+}
