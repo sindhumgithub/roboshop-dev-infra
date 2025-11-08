@@ -176,7 +176,7 @@ resource "aws_autoscaling_policy" "user" {
 #9. Load Balancer Rule
 resource "aws_lb_listener_rule" "user" {
   listener_arn = local.backend_alb_listener_arn
-  priority     = 10
+  priority     = 20
 
   action {
     type             = "forward"
