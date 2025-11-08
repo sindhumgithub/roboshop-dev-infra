@@ -157,3 +157,18 @@ resource "aws_autoscaling_group" "user" {
     delete = "15m"
   }
 }
+
+#8. Autoscaling policy code.
+resource "aws_autoscaling_policy" "user" {
+  autoscaling_group_name = aws_autoscaling_group.user.name
+  name                   = "${local.common_name_suffix}-user"
+  policy_type            = "TargetTrackingScaling"
+
+  target_tracking_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ASGAverageCPUUtilization"
+    }
+
+    target_value = 75.0
+  }
+}
