@@ -80,3 +80,47 @@ resource "aws_lb_target_group" "user" {
     unhealthy_threshold = 2
   }
 }
+
+#6. terraform code to create launch template.
+resource "aws_launch_template" "user" {
+  name = "${local.common_name_suffix}-user"
+  image_id = aws_ami_from_instance.user.id
+
+  instance_initiated_shutdown_behavior = "terminate"
+
+  instance_type = "t3.micro"
+
+  vpc_security_group_ids = [local.user_sg_id]
+
+# tags attached to the Instance
+  tag_specifications {
+    resource_type = "instance"
+
+    tags = merge(
+    local.common_tags,
+    {
+        Name = "${local.common_name_suffix}-user"
+    }
+  )
+}
+
+# tags attached to the Volume created by Instance.
+  tag_specifications {
+    resource_type = "volume"
+
+    tags = merge(
+    local.common_tags,
+    {
+        Name = "${local.common_name_suffix}-user"
+    }
+  )
+}
+
+# tags attached to the Launch Template
+tags = merge(
+    local.common_tags,
+    {
+        Name = "${local.common_name_suffix}-user"
+    }
+  )
+}
