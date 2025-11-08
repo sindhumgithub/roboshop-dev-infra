@@ -1,4 +1,4 @@
-# User Instance creation..
+#1. User Instance creation..
 resource "aws_instance" "user" {
   ami = local.ami_id
   instance_type = var.instance_type
@@ -14,7 +14,7 @@ resource "aws_instance" "user" {
   )
   }
 
-#Connect to user instance using remote-exec provisioner through terraform_data
+#2. Connect to user instance using remote-exec provisioner through terraform_data
   resource "terraform_data" "user" {
   triggers_replace = [ #If ec2 instance id is changed then terraform_data block starts its execution
     aws_instance.user.id
@@ -41,14 +41,14 @@ resource "aws_instance" "user" {
   }
 }
 
-# Terraform code to stop instance to take AMI image
+# 3. Terraform code to stop instance to take AMI image
 resource "aws_ec2_instance_state" "user" {
   instance_id = aws_instance.user.id
   state       = "stopped"
   depends_on = [terraform_data.user]
 }
 
-# Terraform code to take AMI from stopped Instance.
+# 4. Terraform code to take AMI from stopped Instance.
 resource "aws_ami_from_instance" "user" {
   name               = "${local.common_name_suffix}-user-ami"
   source_instance_id = aws_instance.user.id
@@ -59,4 +59,24 @@ resource "aws_ami_from_instance" "user" {
       Name = "${local.common_name_suffix}-user"
     }
   )
+}
+
+
+# 5. User target group code.
+resource "aws_lb_target_group" "user" {
+  name     = "${local.common_name_suffix}-user"
+  port     = 8080
+  protocol = "HTTP"
+  vpc_id   = local.vpc_id
+  deregistration_delay = 60  #waiting period before deleting the instance.
+  health_check {
+    healthy_threshold = 2
+    interval = 20
+    matcher = "200-299"
+    path = "/health"
+    port = 8080
+    protocol = "HTTP"
+    timeout = 2
+    unhealthy_threshold = 2
+  }
 }
