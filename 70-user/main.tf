@@ -41,10 +41,22 @@ resource "aws_instance" "user" {
   }
 }
 
-# Terraform code to stop the instance to take the AMI image
+# Terraform code to stop instance to take AMI image
 resource "aws_ec2_instance_state" "user" {
   instance_id = aws_instance.user.id
   state       = "stopped"
   depends_on = [terraform_data.user]
 }
 
+# Terraform code to take AMI from stopped Instance.
+resource "aws_ami_from_instance" "user" {
+  name               = "${local.common_name_suffix}-user-ami"
+  source_instance_id = aws_instance.user.id
+  depends_on = [aws_ec2_instance_state.user]
+    tags = merge (
+    local.common_tags,
+    {
+      Name = "${local.common_name_suffix}-user"
+    }
+  )
+}
