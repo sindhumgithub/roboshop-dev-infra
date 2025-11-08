@@ -172,3 +172,20 @@ resource "aws_autoscaling_policy" "user" {
     target_value = 75.0
   }
 }
+
+#9. Load Balancer Rule
+resource "aws_lb_listener_rule" "user" {
+  listener_arn = local.backend_alb_listener_arn
+  priority     = 10
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.user.arn
+  }
+
+  condition {
+    host_header {
+      values = ["user.backend-alb-${var.environment}.${var.domain_name}"]
+    }
+  }
+}
