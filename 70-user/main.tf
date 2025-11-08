@@ -40,3 +40,11 @@ resource "aws_instance" "user" {
     ]
   }
 }
+
+# Terraform code to stop the instance to take the AMI image
+resource "aws_ec2_instance_state" "user" {
+  instance_id = aws_instance.user.id
+  state       = "stopped"
+  depends_on = [terraform_data.user]
+}
+
