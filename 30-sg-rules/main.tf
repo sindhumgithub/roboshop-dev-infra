@@ -123,6 +123,7 @@ resource "aws_security_group_rule" "user_backend_alb" {
 }
 
 ################## cart Details #################################
+# connection from cart to bastion.
 resource "aws_security_group_rule" "cart_bastion" {
   type              = "ingress"
   security_group_id = local.cart_sg_id
@@ -155,6 +156,46 @@ resource "aws_security_group_rule" "cart_catalogue" {
 resource "aws_security_group_rule" "cart_backend_alb" {
   type              = "ingress"
   security_group_id = local.cart_sg_id
+  source_security_group_id = local.backend_alb_sg_id
+  from_port         = 8080
+  protocol          = "tcp"
+  to_port           = 8080
+}
+
+################## Shipping Details #################################
+# connection from shipping to bastion
+resource "aws_security_group_rule" "shipping_bastion" {
+  type              = "ingress"
+  security_group_id = local.shipping_sg_id
+  source_security_group_id = local.bastion_sg_id
+  from_port         = 22
+  protocol          = "tcp"
+  to_port           = 22
+}
+
+# connection from shipping to redis.
+resource "aws_security_group_rule" "shipping_cart" {
+  type              = "ingress"
+  security_group_id = local.cart_sg_id
+  source_security_group_id = local.shipping_sg_id
+  from_port         = 8080
+  protocol          = "tcp"
+  to_port           = 8080
+}
+
+resource "aws_security_group_rule" "shipping_mysql" {
+  type              = "ingress"
+  security_group_id = local.mysql_sg_id
+  source_security_group_id = local.shipping_sg_id
+  from_port         = 3306
+  protocol          = "tcp"
+  to_port           = 3306
+}
+
+# connection from backendalb to user
+resource "aws_security_group_rule" "shipping_backend_alb" {
+  type              = "ingress"
+  security_group_id = local.shipping_sg_id
   source_security_group_id = local.backend_alb_sg_id
   from_port         = 8080
   protocol          = "tcp"
