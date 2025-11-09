@@ -18,10 +18,7 @@ variable "service_name" {
   default = "cart"
 }
 
-variable "health_check_interval" {
-  type        = number
-  default = 30
-}
+
 
 variable "domain_name" {
   type = string
