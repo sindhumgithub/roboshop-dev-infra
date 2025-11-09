@@ -6,7 +6,7 @@ module "cart" {
   service_name   = var.service_name
   ssh_user         = "ec2-user"
   ssh_password     = "DevOps321"
-  source_path = "cart.sh"
+  script_source_path = "${path.module}/cart.sh"
   health_check_interval = var.health_check_interval
   priority = 30
   domain_name = var.domain_name
