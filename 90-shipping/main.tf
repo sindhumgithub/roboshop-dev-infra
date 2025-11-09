@@ -6,7 +6,7 @@ module "shipping" {
   service_name   = var.service_name
   ssh_user         = "ec2-user"
   ssh_password     = "DevOps321"
-  priority = 30
+  priority = 40
   domain_name = var.domain_name
 }
 
