@@ -27,3 +27,7 @@ variable "domain_name" {
   type = string
   default = "sindhuworld.icu"
 }
+
+variable "script_source_path" {
+  default = {}
+}
