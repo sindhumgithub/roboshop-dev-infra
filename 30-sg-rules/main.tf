@@ -121,3 +121,42 @@ resource "aws_security_group_rule" "user_backend_alb" {
   protocol          = "tcp"
   to_port           = 8080
 }
+
+################## cart Details #################################
+resource "aws_security_group_rule" "cart_bastion" {
+  type              = "ingress"
+  security_group_id = local.cart_sg_id
+  source_security_group_id = local.bastion_sg_id
+  from_port         = 22
+  protocol          = "tcp"
+  to_port           = 22
+}
+
+# connection from user to redis.
+resource "aws_security_group_rule" "cart_redis" {
+  type              = "ingress"
+  security_group_id = local.redis_sg_id
+  source_security_group_id = local.cart_sg_id
+  from_port         = 6379
+  protocol          = "tcp"
+  to_port           = 6379
+}
+
+resource "aws_security_group_rule" "cart_catalogue" {
+  type              = "ingress"
+  security_group_id = local.catalogue_sg_id
+  source_security_group_id = local.cart_sg_id
+  from_port         = 8080
+  protocol          = "tcp"
+  to_port           = 8080
+}
+
+# connection from backendalb to user
+resource "aws_security_group_rule" "cart_backend_alb" {
+  type              = "ingress"
+  security_group_id = local.cart_sg_id
+  source_security_group_id = local.backend_alb_sg_id
+  from_port         = 8080
+  protocol          = "tcp"
+  to_port           = 8080
+}
