@@ -1,5 +1,5 @@
 module "cart" {
-  source = "D:\\DevOpsShiva\\terraform-roboshop-project\\terraform-aws-services"
+  source = "git::https://github.com/sindhumgithub/terraform-aws-services.git?ref=master"
   project_name   = var.project_name
   environment    = var.environment
   instance_type = var.instance_type
