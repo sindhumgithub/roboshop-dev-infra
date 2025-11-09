@@ -1,11 +1,10 @@
-# Catalogue Instance creation..
+ #Catalogue Instance creation..
 resource "aws_instance" "catalogue" {
   ami = local.ami_id
   instance_type = var.instance_type
   vpc_security_group_ids = [local.catalogue_sg_id]
   subnet_id = local.private_subnet_id
   
-
   tags = merge (
     local.common_tags,
     {
@@ -174,6 +173,7 @@ resource "aws_autoscaling_policy" "catalogue" {
   }
 }
 
+#9. Load Balancer Rule
 resource "aws_lb_listener_rule" "catalogue" {
   listener_arn = local.backend_alb_listener_arn
   priority     = 10
@@ -191,13 +191,13 @@ resource "aws_lb_listener_rule" "catalogue" {
 }
 
 #terraform code to delete catalogue instance.
-resource "terraform_data" "terminate_catalogue_local" {
-  triggers_replace = [
-    aws_instance.catalogue.id
-  ]
+# resource "terraform_data" "terminate_catalogue_local" {
+#   triggers_replace = [
+#     aws_instance.catalogue.id
+#   ]
   
-  depends_on = [aws_autoscaling_policy.catalogue]
-  provisioner "local-exec" {
-    command = "aws ec2 terminate-instances --instance-ids ${aws_instance.catalogue.id}"
-  }
-}
+#   depends_on = [aws_autoscaling_policy.catalogue]
+#   provisioner "local-exec" {
+#     command = "aws ec2 terminate-instances --instance-ids ${aws_instance.catalogue.id}"
+#   }
+# }
