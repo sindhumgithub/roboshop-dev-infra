@@ -173,7 +173,7 @@ resource "aws_security_group_rule" "shipping_bastion" {
   to_port           = 22
 }
 
-# connection from shipping to redis.
+# connection from shipping to cart
 resource "aws_security_group_rule" "shipping_cart" {
   type              = "ingress"
   security_group_id = local.cart_sg_id
@@ -192,10 +192,61 @@ resource "aws_security_group_rule" "shipping_mysql" {
   to_port           = 3306
 }
 
-# connection from backendalb to user
+# connection from backendalb to shipping
 resource "aws_security_group_rule" "shipping_backend_alb" {
   type              = "ingress"
   security_group_id = local.shipping_sg_id
+  source_security_group_id = local.backend_alb_sg_id
+  from_port         = 8080
+  protocol          = "tcp"
+  to_port           = 8080
+}
+
+################## Payment Details #################################
+# connection from payment to bastion
+resource "aws_security_group_rule" "payment_bastion" {
+  type              = "ingress"
+  security_group_id = local.payment_sg_id
+  source_security_group_id = local.bastion_sg_id
+  from_port         = 22
+  protocol          = "tcp"
+  to_port           = 22
+}
+
+# connection from payment to cart 
+resource "aws_security_group_rule" "payment_cart" {
+  type              = "ingress"
+  security_group_id = local.cart_sg_id
+  source_security_group_id = local.payment_sg_id
+  from_port         = 8080
+  protocol          = "tcp"
+  to_port           = 8080
+}
+
+# connection from payment to user  server.
+resource "aws_security_group_rule" "payment_user" {
+  type              = "ingress"
+  security_group_id = local.user_sg_id
+  source_security_group_id = local.payment_sg_id
+  from_port         = 8080
+  protocol          = "tcp"
+  to_port           = 8080
+}
+
+# connection from payment to rabbitmq server.
+resource "aws_security_group_rule" "payment_rabbitmq" {
+  type              = "ingress"
+  security_group_id = local.rabbitmq_sg_id
+  source_security_group_id = local.payment_sg_id
+  from_port         = 25672
+  protocol          = "tcp"
+  to_port           = 25672
+}
+
+# connection from backendalb to payment
+resource "aws_security_group_rule" "payment_backend_alb" {
+  type              = "ingress"
+  security_group_id = local.payment_sg_id
   source_security_group_id = local.backend_alb_sg_id
   from_port         = 8080
   protocol          = "tcp"
