@@ -1,4 +1,4 @@
-module "shipping" {
+module "payment" {
   source = "git::https://github.com/sindhumgithub/terraform-aws-services.git?ref=master"
   project_name   = var.project_name
   environment    = var.environment
