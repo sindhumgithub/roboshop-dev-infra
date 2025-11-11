@@ -3,7 +3,7 @@ resource "aws_instance" "frontend" {
   ami = local.ami_id
   instance_type = var.instance_type
   vpc_security_group_ids = [local.frontend_sg_id]
-  subnet_id = local.public_subnet_id
+  subnet_id = local.private_subnet_id
   
 
   tags = merge (
@@ -24,7 +24,7 @@ resource "aws_instance" "frontend" {
     type     = "ssh"
     user     = "ec2-user"
     password = "DevOps321"
-    host     = aws_instance.frontend.public_ip
+    host     = aws_instance.frontend.private_ip
   }
 
 # terraform copies the file to redis server
@@ -143,7 +143,7 @@ resource "aws_autoscaling_group" "frontend" {
     id      = aws_launch_template.frontend.id
     version = aws_launch_template.frontend.latest_version
   }
-  vpc_zone_identifier       = local.public_subnet_ids
+  vpc_zone_identifier       = local.private_subnet_ids
   target_group_arns = [aws_lb_target_group.frontend.arn]
 
 # instance_refresh is used so that application will not be down and application is up and running.
