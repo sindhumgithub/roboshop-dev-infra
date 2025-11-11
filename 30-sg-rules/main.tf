@@ -262,7 +262,7 @@ resource "aws_security_group_rule" "frontend_alb_public" {
   protocol          = "tcp"
   to_port           = 443
 }
-###############frontend load balancer #######################
+###############frontend #######################
 # connection from frontendalb to frontend
 resource "aws_security_group_rule" "frontend_frontend_alb" {
   type              = "ingress"
@@ -273,6 +273,7 @@ resource "aws_security_group_rule" "frontend_frontend_alb" {
   to_port           = 80
 }
 
+# connection from frontend to bastion
 resource "aws_security_group_rule" "frontend_bastion" {
   type              = "ingress"
   security_group_id = local.frontend_sg_id
