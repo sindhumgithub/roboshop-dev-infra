@@ -253,7 +253,7 @@ resource "aws_security_group_rule" "payment_backend_alb" {
   to_port           = 8080
 }
 
-
+# frontend alb public security group
 resource "aws_security_group_rule" "frontend_alb_public" {
   type              = "ingress"
   security_group_id = local.frontend_alb_sg_id
