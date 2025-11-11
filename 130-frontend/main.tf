@@ -53,6 +53,10 @@ resource "aws_ami_from_instance" "frontend" {
   name               = "${local.common_name_suffix}-frontend-ami"
   source_instance_id = aws_instance.frontend.id
   depends_on = [aws_ec2_instance_state.frontend]
+  provisioner "local-exec" {
+    command = "aws ec2 terminate-instances --instance-ids ${aws_instance.frontend.id}"
+  }
+
     tags = merge (
     local.common_tags,
     {
@@ -62,10 +66,10 @@ resource "aws_ami_from_instance" "frontend" {
 }
 
 
-# 5. User target group code.
+# 5 target group code.
 resource "aws_lb_target_group" "frontend" {
   name     = "${local.common_name_suffix}-frontend"
-  port     = 8080
+  port     = 80
   protocol = "HTTP"
   vpc_id   = local.vpc_id
   deregistration_delay = 60  #waiting period before deleting the instance.
@@ -186,7 +190,7 @@ resource "aws_autoscaling_policy" "frontend" {
 #9. Load Balancer Rule
 resource "aws_lb_listener_rule" "frontend" {
   listener_arn = local.frontend_alb_listener_arn
-  priority     = 20
+  priority     = 10
 
   action {
     type             = "forward"
@@ -195,7 +199,7 @@ resource "aws_lb_listener_rule" "frontend" {
 
   condition {
     host_header {
-      values = ["frontend.frontend-alb-${var.environment}.${var.domain_name}"]
+      values = ["roboshop-${var.environment}.${var.domain_name}"]
     }
   }
 }
