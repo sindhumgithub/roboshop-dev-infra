@@ -36,7 +36,7 @@ resource "aws_instance" "frontend" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x /tmp/frontend.sh",
-      "sudo sh /tmp/frontend.sh user ${var.environment}"
+      "sudo sh /tmp/frontend.sh frontend ${var.environment}"
     ]
   }
 }
